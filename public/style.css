@@ -1,0 +1,28 @@
+
+.jumbotron-container {
+    display: flex;
+    justify-content: center;
+    background-image: url('./images/background.jpg');
+    background-repeat: none;
+    background-size: 100%;
+    margin-top: 50px;
+    padding-top: 50px;
+    padding-bottom: 30px;
+}
+.jumbotron {
+    width: 900px;
+    text-align: center;
+    background-color: #f7e2c4 !important;
+}
+
+#searchCityForm {
+   justify-content: center;
+    text-align: center;
+    margin: -.5rem 5px 0 5px;
+}
+
+#form-div {
+    display: flex;
+    justify-content: center;
+    padding-top: 30px;
+}
