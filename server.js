@@ -6,7 +6,7 @@ const colors = require('colors');
 let path = require("path");
 
 const app = express();
-const PORT = process.env.PORT || 3009;
+const PORT = process.env.PORT || 8080;
 
 // app.get('/key', function (require, response) {
 //     return key = process.env.ACCUWEATHER_API_KEY;
