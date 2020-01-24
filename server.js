@@ -8,9 +8,6 @@ let path = require("path");
 const app = express();
 const PORT = process.env.PORT || 8080;
 
-// app.get('/key', function (require, response) {
-//     return key = process.env.ACCUWEATHER_API_KEY;
-// })
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, '/public')));
