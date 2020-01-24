@@ -1,89 +1,202 @@
 <!DOCTYPE html>
 <html lang="en">
 
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>Coding Exercise: Weather</title>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <title>Coding Exercise: Weather</title>
 
-    <link rel="stylesheet" type="text/css" href="style.css">
-    <link rel="stylesheet"
-      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
-      crossorigin="anonymous">
+  <link rel="stylesheet" type="text/css" href="style.css">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
-    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
-  </head>
+  <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+</head>
 
-  <body>
-    <div class="jumbotron-container">
-      <div class="jumbotron">
-        <h1 class="display-4" id="home-jumbo">
-          Today's low and high in <span id="chosen-city">Chicago</span> is:
-          <span id="low-weather">?</span><span id="high-weather">?</span>
-        </h1>
+<body>
+  <div class="jumbotron-container">
+    <div class="jumbotron">
+      <h1 class="display-4" id="home-jumbo">
+        Today's low/high in <span id="chosen-city">Chicago</span> is:
+        <span id="low-weather">?</span>
+      </h1>
 
-        <hr class="my-4" />
-        <div id="form-div">
-          <form class="form-inline">
-            <input class="form-control" id="searchCityForm" type="text"
-              placeholder="Search by Location">
-            <button type="submit" id="submitButton" class="btn btn-info mb-2">Press
-              First</button>
-            <button type="submit" id="getWeather" class="btn btn-info mb-2">Press
-              Second</button>
-          </form>
+      <hr class="my-4" />
+      <div id="form-div">
+        <form class="form-inline">
+          <input class="form-control" id="searchCityForm" type="text" placeholder="Search by Location">
+          <button type="submit" id="submitButton" class="btn btn-info mb-2">Choose
+            City</button>
+          <button type="submit" id="getWeather" class="btn btn-info mb-2">Get
+            Weather</button>
+        </form>
+      </div>
+      <br><br>
+
+      <div id="weather-cards">
+        <div class="row">
+          <div class="col-sm-4">
+            <div class="card">
+              <div class="card-body">
+                <h5 class="card-title"><span id="firstDayDate"></span></h5>
+                <p class="card-text">Low/High: <span id="firstDayWeather"></span></p>
+                <p>Day: <span id="oneDayDescription"></span></p>
+                <p>Night: <span id="oneNightDescription"></span></p>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-4">
+            <div class="card">
+              <div class="card-body">
+                <h5 class="card-title"><span id="secondDayDate"></span></h5>
+                <p class="card-text">Low/High: <span id="secondDayWeather"></span>
+                </p>
+                <p>Day: <span id="twoDayDescription"></span></p>
+                <p>Night: <span id="twoNightDescription"></span></p>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-4">
+            <div class="card">
+              <div class="card-body">
+                <h5 class="card-title"><span id="thirdDayDate"></span></h5>
+                <p class="card-text">Low/High: <span id="thirdDayWeather"></span></p>
+                <p>Day: <span id="threeDayDescription"></span></p>
+                <p>Night: <span id="threeNightDescription"></span></p>
+
+              </div>
+            </div>
+          </div>
         </div>
       </div>
+    </div>
 
-      <script src="jquery.js"></script>
-      <script>
+    <script src="jquery.js"></script>
+    <script>
+      const APIkey = "HgCNJPGZdbENgmsatzFBnhvizNNuayRO"; //To be hidden in .env file
 
       $(document).ready(function () {
-        let APIkey = "HgCNJPGZdbENgmsatzFBnhvizNNuayRO"; //To be hidden in .env file
-        let searchedCity = "";
-        let cityKey = "";
+        let onLoadWeather = "http://dataservice.accuweather.com/forecasts/v1/daily/5day/" + 348308 + "?apikey=" + APIkey;
+        let dayAfterTomorrow = "";
+        let todaysDate = "";
+        let tomorrowsDate = "";
 
-        $("#submitButton").on("click", function SearchCity(event) {
-          event.preventDefault();
+        $.ajax({
+          url: onLoadWeather,
+          method: "GET"
+        }).then(function (response) {
+          console.log(response);
+          todaysDate = response.DailyForecasts[0].Date.substr(5, 5); //Could make a for loop for these 
+          tomorrowsDate = response.DailyForecasts[1].Date.substr(5, 5);
+          dayAfterTomorrowDate = response.DailyForecasts[2].Date.substr(5, 5);
+          todaysWeather = response.DailyForecasts[0].Temperature.Minimum.Value + "F/ " + response.DailyForecasts[0].Temperature.Maximum.Value + "F";
+          tomorrowsWeather = response.DailyForecasts[1].Temperature.Minimum.Value + "F/ " + response.DailyForecasts[1].Temperature.Maximum.Value + "F";
+          dayAfterWeather = response.DailyForecasts[2].Temperature.Minimum.Value + "F/ " + response.DailyForecasts[2].Temperature.Maximum.Value + "F";
+          todaysDescription = response.DailyForecasts[0].Day.IconPhrase
+          tomorrowsDescription = response.DailyForecasts[0].Day.IconPhrase
+          dayAfterDescription = response.DailyForecasts[0].Day.IconPhrase
+          todaysNightDescription = response.DailyForecasts[0].Night.IconPhrase
+          tomorrowsNightDescription = response.DailyForecasts[0].Night.IconPhrase
+          dayAfterNightDescription = response.DailyForecasts[0].Night.IconPhrase
 
-          searchedCity = $("#searchCityForm").val();
-          let searchCityForLink = "http://dataservice.accuweather.com/locations/v1/cities/search?apikey=" + APIkey + "&q=" + searchedCity + "&alias=IL";
-
-          $("#chosen-city").text(searchedCity);
-
-          $.ajax({
-            url: searchCityForLink,
-            method: "GET"
-            }).then(function (response) {
-            cityKey = response[0].Key;
-            console.log(cityKey)
-            })
-
+          $("#low-weather").text(response.DailyForecasts[0].Temperature.Minimum.Value + "F/ " + response.DailyForecasts[0].Temperature.Maximum.Value + "F");
+          $("#firstDayDate").text(todaysDate);
+          $("#secondDayDate").text(tomorrowsDate);
+          $("#thirdDayDate").text(dayAfterTomorrowDate);
+          $("#firstDayWeather").text(todaysWeather);
+          $("#secondDayWeather").text(tomorrowsWeather);
+          $("#thirdDayWeather").text(dayAfterWeather);
+          $("#oneDayDescription").text(todaysDescription);
+          $("#twoDayDescription").text(tomorrowsDescription);
+          $("#threeDayDescription").text(dayAfterDescription);
+          $("#oneNightDescription").text(todaysNightDescription);
+          $("#twoNightDescription").text(tomorrowsNightDescription);
+          $("#threeNightDescription").text(dayAfterNightDescription);
         })
+      });
 
-        $("#getWeather").on("click", function SearchWeather(event){
-          event.preventDefault();
-          let searchCityForWeather = "http://dataservice.accuweather.com/forecasts/v1/daily/5day/" + cityKey + "?apikey=" + APIkey;
+      // $(document).ready(function () {
+      let searchedCity = "";
+      let cityKey = "";
 
-          $.ajax({
-            url: searchCityForWeather,
-            method: "GET"
-            }).then(function (response) {
-              console.log(response);
-          $("#low-weather").text(response.DailyForecasts[0].Temperature.Minimum.Value + "F & ");
-            $("#high-weather").text(response.DailyForecasts[0].Temperature.Maximum.Value + "F");
-          })
+      $("#submitButton").on("click", function SearchCity(event) {
+        event.preventDefault();
+
+        searchedCity = $("#searchCityForm").val();
+        let searchCityForLink = "http://dataservice.accuweather.com/locations/v1/cities/search?apikey=" + APIkey + "&q=" + searchedCity + "&alias=IL";
+
+        $("#chosen-city").text(searchedCity);
+
+        $.ajax({
+          url: searchCityForLink,
+          method: "GET"
+        }).then(function (response) {
+          cityKey = response[0].Key;
+          $("#low-weather").text(""); //Clears low's and high's
+          $("#high-weather").text("");
+          $("#oneDayDescription").text("");
+          $("#twoDayDescription").text("");
+          $("#threeDayDescription").text("");
+          $("#oneNightDescription").text("");
+          $("#twoNightDescription").text("");
+          $("#threeNightDescription").text("");
+          $("#firstDayWeather").text("");
+          $("#secondDayWeather").text("");
+          $("#thirdDayWeather").text("");
+
+          $("#chosen-city").text(response[0].LocalizedName); //gives properly spelled city name
         })
       })
 
-    </script>
-      <script
-        src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
-        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
-        crossorigin="anonymous">
-      </script>
-    </body>
+      $("#getWeather").on("click", function SearchWeather(event) {
+        event.preventDefault();
+        let searchCityForWeather = "http://dataservice.accuweather.com/forecasts/v1/daily/5day/" + cityKey + "?apikey=" + APIkey;
 
-  </html>
+        $.ajax({
+          url: searchCityForWeather,
+          method: "GET"
+        }).then(function (response) {
+          console.log(response);
+          todaysDate = response.DailyForecasts[0].Date.substr(5, 5);
+          tomorrowsDate = response.DailyForecasts[1].Date.substr(5, 5);
+          dayAfterTomorrow = response.DailyForecasts[2].Date.substr(5, 5);
+          todaysWeather = response.DailyForecasts[0].Temperature.Minimum.Value + "F/" + response.DailyForecasts[0].Temperature.Maximum.Value + "F";
+          tomorrowsWeather = response.DailyForecasts[1].Temperature.Minimum.Value + "F/" + response.DailyForecasts[1].Temperature.Maximum.Value + "F";
+          dayAfterWeather = response.DailyForecasts[2].Temperature.Minimum.Value + "F/" + response.DailyForecasts[2].Temperature.Maximum.Value + "F";
+          todaysDescription = response.DailyForecasts[0].Day.IconPhrase
+          tomorrowsDescription = response.DailyForecasts[0].Day.IconPhrase
+          dayAfterDescription = response.DailyForecasts[0].Day.IconPhrase
+          todaysNightDescription = response.DailyForecasts[0].Night.IconPhrase
+          tomorrowsNightDescription = response.DailyForecasts[0].Night.IconPhrase
+          dayAfterNightDescription = response.DailyForecasts[0].Night.IconPhrase
+
+
+          $("#low-weather").text(response.DailyForecasts[0].Temperature.Minimum.Value + "F & " + response.DailyForecasts[0].Temperature.Maximum.Value + "F");
+
+          $("#firstDayDate").text(todaysDate);
+          $("#secondDayDate").text(tomorrowsDate);
+          $("#thirdDayDate").text(dayAfterTomorrowDate);
+
+          $("#firstDayWeather").text(todaysWeather);
+          $("#secondDayWeather").text(tomorrowsWeather);
+          $("#thirdDayWeather").text(dayAfterWeather);
+          $("#oneDayDescription").text(todaysDescription);
+          $("#twoDayDescription").text(tomorrowsDescription);
+          $("#threeDayDescription").text(dayAfterDescription);
+          $("#oneNightDescription").text(todaysNightDescription);
+          $("#twoNightDescription").text(tomorrowsNightDescription);
+          $("#threeNightDescription").text(dayAfterNightDescription);
+
+
+        })
+      })
+      // })
+
+    </script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+      integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous">
+      </script>
+</body>
+
+</html>

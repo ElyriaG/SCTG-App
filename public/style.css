@@ -30,3 +30,7 @@
 #getWeather {
     margin-left: 6px;
 }
+
+span {
+    font-weight: 500;
+}
