@@ -77,7 +77,7 @@
       const APIkey = "HgCNJPGZdbENgmsatzFBnhvizNNuayRO"; //To be hidden in .env file
 
       $(document).ready(function () {
-        let onLoadWeather = "http://dataservice.accuweather.com/forecasts/v1/daily/5day/" + 348308 + "?apikey=" + APIkey;
+        let onLoadWeather = "https://dataservice.accuweather.com/forecasts/v1/daily/5day/" + 348308 + "?apikey=" + APIkey;
         let dayAfterTomorrow = "";
         let todaysDate = "";
         let tomorrowsDate = "";
@@ -124,7 +124,7 @@
         event.preventDefault();
 
         searchedCity = $("#searchCityForm").val();
-        let searchCityForLink = "http://dataservice.accuweather.com/locations/v1/cities/search?apikey=" + APIkey + "&q=" + searchedCity + "&alias=IL";
+        let searchCityForLink = "https://dataservice.accuweather.com/locations/v1/cities/search?apikey=" + APIkey + "&q=" + searchedCity + "&alias=IL";
 
         $("#chosen-city").text(searchedCity);
 
@@ -151,7 +151,7 @@
 
       $("#getWeather").on("click", function SearchWeather(event) {
         event.preventDefault();
-        let searchCityForWeather = "http://dataservice.accuweather.com/forecasts/v1/daily/5day/" + cityKey + "?apikey=" + APIkey;
+        let searchCityForWeather = "https://dataservice.accuweather.com/forecasts/v1/daily/5day/" + cityKey + "?apikey=" + APIkey;
 
         $.ajax({
           url: searchCityForWeather,
