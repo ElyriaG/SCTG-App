@@ -86,7 +86,6 @@
           url: onLoadWeather,
           method: "GET"
         }).then(function (response) {
-          console.log(response);
           todaysDate = response.DailyForecasts[0].Date.substr(5, 5); //Could make a for loop for these 
           tomorrowsDate = response.DailyForecasts[1].Date.substr(5, 5);
           dayAfterTomorrowDate = response.DailyForecasts[2].Date.substr(5, 5);
@@ -157,7 +156,6 @@
           url: searchCityForWeather,
           method: "GET"
         }).then(function (response) {
-          console.log(response);
           todaysDate = response.DailyForecasts[0].Date.substr(5, 5);
           tomorrowsDate = response.DailyForecasts[1].Date.substr(5, 5);
           dayAfterTomorrow = response.DailyForecasts[2].Date.substr(5, 5);
