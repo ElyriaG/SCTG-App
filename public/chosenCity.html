@@ -1,25 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
+
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>Coding Exercise: Weather</title>
 
-    <script
-      src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <link rel="stylesheet" type="text/css" href="style.css">
     <link rel="stylesheet"
       href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
       integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
       crossorigin="anonymous">
-    <script data-main='../server' src="scripts/require.js"></script> </head>
+
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+  </head>
+
   <body>
     <div class="jumbotron-container">
       <div class="jumbotron">
         <h1 class="display-4" id="home-jumbo">
-          The current weather in <span id="chosen-city">Chicago</span> is: <span
-            id="city-weather">?</span>
+          Today's low and high in <span id="chosen-city">Chicago</span> is:
+          <span id="low-weather">?</span><span id="high-weather">?</span>
         </h1>
 
         <hr class="my-4" />
@@ -27,23 +29,61 @@
           <form class="form-inline">
             <input class="form-control" id="searchCityForm" type="text"
               placeholder="Search by Location">
-            <button type="submit" id="submitButton" class="btn btn-info mb-2">Search</button>
+            <button type="submit" id="submitButton" class="btn btn-info mb-2">Press
+              First</button>
+            <button type="submit" id="getWeather" class="btn btn-info mb-2">Press
+              Second</button>
           </form>
         </div>
       </div>
 
+      <script src="jquery.js"></script>
+      <script>
 
-      <script
-        src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-        crossorigin="anonymous"></script>
-      <script
-        src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
-        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
-        crossorigin="anonymous"></script>
+      $(document).ready(function () {
+        let APIkey = "HgCNJPGZdbENgmsatzFBnhvizNNuayRO"; //To be hidden in .env file
+        let searchedCity = "";
+        let cityKey = "";
+
+        $("#submitButton").on("click", function SearchCity(event) {
+          event.preventDefault();
+
+          searchedCity = $("#searchCityForm").val();
+          let searchCityForLink = "http://dataservice.accuweather.com/locations/v1/cities/search?apikey=" + APIkey + "&q=" + searchedCity + "&alias=IL";
+
+          $("#chosen-city").text(searchedCity);
+
+          $.ajax({
+            url: searchCityForLink,
+            method: "GET"
+            }).then(function (response) {
+            cityKey = response[0].Key;
+            console.log(cityKey)
+            })
+
+        })
+
+        $("#getWeather").on("click", function SearchWeather(event){
+          event.preventDefault();
+          let searchCityForWeather = "http://dataservice.accuweather.com/forecasts/v1/daily/5day/" + cityKey + "?apikey=" + APIkey;
+
+          $.ajax({
+            url: searchCityForWeather,
+            method: "GET"
+            }).then(function (response) {
+              console.log(response);
+          $("#low-weather").text(response.DailyForecasts[0].Temperature.Minimum.Value + "F & ");
+            $("#high-weather").text(response.DailyForecasts[0].Temperature.Maximum.Value + "F");
+          })
+        })
+      })
+
+    </script>
       <script
         src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
-        crossorigin="anonymous"></script>
+        crossorigin="anonymous">
+      </script>
     </body>
+
   </html>
